@@ -9,6 +9,7 @@ const STATIC_ASSETS = [
   './app.html',
   './style.css',
   './src/chunk.js',
+  './src/app.js',
   './src/fingerprint.js',
   './src/qrcode.js',
   './src/paperkey.js',

@@ -1,5 +1,7 @@
 const { test, describe } = require('node:test');
 const { strict: assert } = require('node:assert');
+const { readFileSync } = require('node:fs');
+const { runInNewContext } = require('node:vm');
 const {
   calculateFingerprint,
   verifyFingerprint,
@@ -47,6 +49,20 @@ describe('calculateFingerprint', () => {
     assert.strictEqual(typeof fp, 'string');
     assert.strictEqual(fp.length, 40);
     assert.ok(/^[0-9a-f]{40}$/.test(fp), `fingerprint should be 40 hex chars, got: ${fp}`);
+  });
+
+  test('browser fallback calculates v4 and v5 fingerprints without Node built-ins', () => {
+    const browserContext = { atob };
+    runInNewContext(readFileSync(require.resolve('../src/fingerprint.js'), 'utf8'), browserContext);
+
+    const vectors = [
+      [0x04, '7a1ff1259daeb8c045c4d986546175db09119b12'],
+      [0x05, '76b9d1c5bb7b684c9c9eb63dbcbcad28e3bb0cd4'],
+    ];
+    for (const [version, expected] of vectors) {
+      const body = Buffer.from([version, 0x00, 0x00, 0x00, 0x00, 0x01, 0x00, 0x10, 0xaa, 0xbb]);
+      assert.strictEqual(browserContext.fingerprint.calculateFingerprint(makeArmoredKey(body)), expected);
+    }
   });
 
   test('same key produces same fingerprint', () => {

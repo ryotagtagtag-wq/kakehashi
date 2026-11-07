@@ -1,3 +1,4 @@
+(function () {
 // Chunk.js – PK1 分割・結合ユーティリティ
 
 // エラークラス
@@ -158,8 +159,7 @@ function missingIndexes(chunks, total) {
   return missing;
 }
 
-// エクスポート (CommonJS)
-module.exports = {
+const chunkApi = {
   splitPK1,
   collectPK1,
   missingIndexes,
@@ -168,3 +168,18 @@ module.exports = {
   DuplicateIndexConflictError,
   MissingIndexesError,
 };
+
+if (typeof module !== 'undefined' && module.exports) {
+  module.exports = {
+    splitPK1,
+    collectPK1,
+    missingIndexes,
+    InvalidChunkError,
+    DuplicateIndexConflictError,
+    MissingIndexesError,
+  };
+}
+if (typeof globalThis !== 'undefined') {
+  globalThis.chunk = chunkApi;
+}
+})();

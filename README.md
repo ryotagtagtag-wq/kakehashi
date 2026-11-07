@@ -8,9 +8,8 @@ OpenPGP 秘密鍵を紙にバックアップし、災害や紛失時に keys.ope
 
 ## 使い方
 
-1. **取得ページ (`fetch.html`)**: keys.openpgp.org からメールアドレスで公開鍵を検索し、ダウンロードします。
-2. **印刷**: 秘密鍵の paperkey 形式の秘密部分を QR に分割して紙に印刷します（`@media print` で QR のみ出力）。
-3. **復元ページ (`restore.html`)**: 公開鍵と QR を読み取り、紙に併記されたフィンガープリントと照合して秘密鍵を復元し、`.gpg` 相当のバイナリとしてダウンロードします。
+1. **統合ページ (`app.html`)**: 紙の QR コードを読み取り、メールアドレスで keys.openpgp.org から公開鍵を取得します。
+2. 紙に併記されたフィンガープリントを照合し、秘密鍵を復元して `.gpg` 相当のバイナリとしてダウンロードします。
 
 ## 対象範囲
 
@@ -20,8 +19,7 @@ OpenPGP 秘密鍵を紙にバックアップし、災害や紛失時に keys.ope
 
 ## 制約
 
-- 復元ページ (`restore.html`) は一切の外部通信を行いません（CSP: `connect-src 'none'`）。
-- 取得ページ (`fetch.html`) のみ `connect-src https://keys.openpgp.org` を許可します。
+- 統合ページ (`app.html`) は keys.openpgp.org への公開鍵取得と、同一オリジンからの WASM 読み込みのみ接続を許可します（CSP: `connect-src 'self' https://keys.openpgp.org`）。
 - 秘密鍵・秘密部分・パスフレーズはローカルストレージに保存されません。
 - Service Worker は静的アセットのみをキャッシュし、鍵サーバーのレスポンスはキャッシュ対象外です。
 

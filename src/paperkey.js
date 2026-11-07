@@ -1,3 +1,4 @@
+(function () {
 'use strict';
 
 /**
@@ -8,7 +9,10 @@
  * 復元後のフィンガープリント照合までここで完結させ、外部に検証を委ねない。
  */
 
-const { calculateFingerprint, verifyFingerprint } = require('./fingerprint.js');
+const fingerprintApi = typeof require === 'function'
+  ? require('./fingerprint.js')
+  : globalThis.fingerprint;
+const { calculateFingerprint, verifyFingerprint } = fingerprintApi;
 
 // vendor/paperkey/paperkey.js は Emscripten の classic build。
 // CommonJS では require の戻り値が Module、ブラウザでは <script> が globalThis.Module を作る。
@@ -97,8 +101,11 @@ async function initializeRuntime() {
 }
 
 function acquireVendorModule() {
-  if (globalThis.Module && globalThis.Module.FS) {
+  if (globalThis.Module) {
     return globalThis.Module;
+  }
+  if (typeof require !== 'function') {
+    throw new PaperkeyInitError('vendor/paperkey/paperkey.js が読み込まれていません');
   }
   try {
     return require(VENDOR_GLUE_PATH);
@@ -200,8 +207,8 @@ function encodeSecretPart(secretPart, inputType) {
       throw new PaperkeyRestoreError('紙の秘密部分が空です');
     }
     return inputType === 'raw'
-      ? new Uint8Array(Buffer.from(text, 'base64'))
-      : new Uint8Array(Buffer.from(text, 'utf8'));
+      ? decodeBase64(text)
+      : encodeUtf8(text);
   }
 
   if (secretPart instanceof Uint8Array) {
@@ -261,7 +268,7 @@ function dearmor(armoredText) {
   if (base64Lines.length === 0) {
     throw new PaperkeyRestoreError('armored 公開鍵に base64 本体がありません');
   }
-  const decoded = Buffer.from(base64Lines.join(''), 'base64');
+  const decoded = decodeBase64(base64Lines.join(''));
   if (decoded.length === 0) {
     throw new PaperkeyRestoreError('armored 公開鍵の base64 を復号できませんでした');
   }
@@ -323,7 +330,7 @@ function restoreWithPaperkey(module, publicKeyBody, secretBytes, inputTypeCode) 
   const allocatedPointers = [];
 
   const toCString = (text) => {
-    const encoded = Buffer.from(`${text}\0`, 'utf8');
+    const encoded = encodeUtf8(`${text}\0`);
     const pointer = module._malloc(encoded.length);
     if (pointer === 0) {
       throw new PaperkeyRestoreError('paperkey の作業メモリを確保できませんでした');
@@ -439,8 +446,27 @@ function verifyRestoredKey({ publicKeyBody, restoredBytes, pubkeyArmored }) {
 
 function armorPublicKeyBody(publicKeyBody) {
   const packet = buildPublicKeyPacket(publicKeyBody);
-  const base64 = Buffer.from(packet).toString('base64').replace(/(.{64})/g, '$1\n');
+  const base64 = encodeBase64(packet).replace(/(.{64})/g, '$1\n');
   return `-----BEGIN PGP PUBLIC KEY BLOCK-----\n\n${base64}\n-----END PGP PUBLIC KEY BLOCK-----\n`;
+}
+
+function decodeBase64(text) {
+  if (typeof Buffer !== 'undefined') return new Uint8Array(Buffer.from(text, 'base64'));
+  return Uint8Array.from(atob(text), (character) => character.charCodeAt(0));
+}
+
+function encodeBase64(bytes) {
+  if (typeof Buffer !== 'undefined') return Buffer.from(bytes).toString('base64');
+  let binary = '';
+  for (let offset = 0; offset < bytes.length; offset += 0x8000) {
+    binary += String.fromCharCode(...bytes.subarray(offset, offset + 0x8000));
+  }
+  return btoa(binary);
+}
+
+function encodeUtf8(text) {
+  if (typeof Buffer !== 'undefined') return Buffer.from(text, 'utf8');
+  return new TextEncoder().encode(text);
 }
 
 function bytesEqual(left, right) {
@@ -463,10 +489,18 @@ function enqueueInvocation(task) {
   return result;
 }
 
-module.exports = {
+const paperkeyApi = {
   initPaperkeyWasm,
   restoreSecretKey,
   PaperkeyInitError,
   PaperkeyRestoreError,
   PaperkeyFingerprintMismatchError,
 };
+
+if (typeof module !== 'undefined' && module.exports) {
+  module.exports = paperkeyApi;
+}
+if (typeof globalThis !== 'undefined') {
+  globalThis.paperkey = paperkeyApi;
+}
+})();

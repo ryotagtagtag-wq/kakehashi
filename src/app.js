@@ -10,21 +10,21 @@
  */
 
 // ── モジュール読み込み ──
-const { splitPK1, collectPK1, missingIndexes } = chunk;
+const { splitPK1, collectPK1, missingIndexes } = globalThis.chunk;
 const {
   calculateFingerprint,
   verifyFingerprint,
   InvalidArmoredKeyError,
   UnsupportedKeyVersionError,
-} = fingerprint;
-const { decodeQR } = qrcode;
+} = globalThis.fingerprint;
+const { decodeQR } = globalThis.qrcode;
 const {
   initPaperkeyWasm,
   restoreSecretKey,
   PaperkeyInitError,
   PaperkeyRestoreError,
   PaperkeyFingerprintMismatchError,
-} = paperkey;
+} = globalThis.paperkey;
 
 // ── 状態 ──
 let chunks = [];
@@ -66,7 +66,7 @@ const els = {
 // ── ステップ管理 ──
 function showStep(stepName) {
   document.querySelectorAll('.step').forEach((s) => {
-    s.style.display = s.id === `step-${stepName}` ? 'block' : 'none';
+    s.hidden = s.id !== `step-${stepName}`;
   });
 }
 
@@ -87,7 +87,7 @@ function resetState() {
   els.paperFpInput.value = '';
   els.qrStatus.textContent = '';
   els.fetchStatus.textContent = '';
-  els.chunkProgress.style.display = 'none';
+  els.chunkProgress.hidden = true;
   els.btnFetch.disabled = false;
   els.btnRestore.disabled = true;
   stopCamera();
@@ -103,7 +103,7 @@ function stopCamera() {
     cameraStream.getTracks().forEach((track) => track.stop());
     cameraStream = null;
   }
-  els.cameraContainer.style.display = 'none';
+  els.cameraContainer.hidden = true;
   els.startCamera.textContent = 'カメラを起動';
 }
 
@@ -117,7 +117,7 @@ els.startCamera.addEventListener('click', async () => {
     const stream = await navigator.mediaDevices.getUserMedia({ video: { facingMode: 'environment' } });
     cameraStream = stream;
     els.cameraVideo.srcObject = stream;
-    els.cameraContainer.style.display = 'block';
+    els.cameraContainer.hidden = false;
     els.startCamera.textContent = 'カメラを停止';
 
     await new Promise((resolve) => {
@@ -222,8 +222,8 @@ function updateChunkProgress() {
   const collected = chunks.length;
   const pct = totalChunks > 0 ? Math.round((collected / totalChunks) * 100) : 0;
 
-  els.chunkProgress.style.display = 'block';
-  els.progressBar.style.width = `${pct}%`;
+  els.chunkProgress.hidden = false;
+  els.progressBar.value = pct;
   els.progressText.textContent = `${collected} / ${totalChunks} 枚読み取り済み`;
   els.missingText.textContent = missing.length > 0 ? `欠番: ${missing.join(', ')}` : '欠番: なし';
 }
@@ -322,11 +322,13 @@ function assembleSecretPart() {
 els.btnRestore.addEventListener('click', async () => {
   // フィンガープリント照合（取得鍵 vs 紙）
   if (calculatedFingerprint.toLowerCase() !== paperFingerprint) {
-    els.fpResult.innerHTML = '<span style="color:red;">❌ フィンガープリントが一致しません。</span>';
+    els.fpResult.textContent = '❌ フィンガープリントが一致しません。';
+    els.fpResult.classList.add('error');
     return;
   }
 
-  els.fpResult.innerHTML = '<span style="color:green;">✅ フィンガープリントが一致しました。</span>';
+  els.fpResult.textContent = '✅ フィンガープリントが一致しました。';
+  els.fpResult.classList.remove('error');
 
   // 秘密部分を結合
   try {
@@ -369,7 +371,7 @@ els.btnRestore.addEventListener('click', async () => {
 
     // 復元後のフィンガープリント再照合
     try {
-      const { readFirstPacket } = fingerprint;
+      const { readFirstPacket } = globalThis.fingerprint;
       const firstPacket = readFirstPacket(restoredBytes);
       if (firstPacket.tag !== 5) {
         throw new PaperkeyRestoreError('再構成されたデータが秘密鍵パケットではありません');
@@ -422,7 +424,8 @@ function cleanup(restoredBytes) {
   els.emailInput.value = '';
   els.paperFpInput.value = '';
   stopCamera();
-  els.fpResult.innerHTML = '<span style="color:green;">✅ 復元が完了しました。メモリ上の秘密情報は消去されました。</span>';
+  els.fpResult.textContent = '✅ 復元が完了しました。メモリ上の秘密情報は消去されました。';
+  els.fpResult.classList.remove('error');
 }
 
 // ── リトライ ──
@@ -430,3 +433,9 @@ els.btnRetry.addEventListener('click', resetState);
 
 // ── 初期化 ──
 resetState();
+
+if ('serviceWorker' in navigator && /^https?:$/.test(location.protocol)) {
+  navigator.serviceWorker.register('./sw.js').catch((error) => {
+    console.error('Service Worker の登録に失敗しました:', error);
+  });
+}

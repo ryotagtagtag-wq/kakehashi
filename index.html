@@ -39,7 +39,7 @@
     <section>
       <h2>制約・注意</h2>
       <ul>
-        <li>統合ページは keys.openpgp.org と通信して公開鍵を取得します（CSP: connect-src https://keys.openpgp.org）</li>
+        <li>統合ページは keys.openpgp.org から公開鍵を取得し、同一オリジンから WASM を読み込みます（CSP: connect-src 'self' https://keys.openpgp.org）</li>
         <li>秘密鍵の再構成は完全ローカルで行い、外部通信は公開鍵取得のみです</li>
         <li>秘密鍵・秘密部分・パスフレーズはローカルストレージに保存しません</li>
         <li>paperkey は GPL v2+ ライセンスで同梱されています（vendor/paperkey/、THIRD_PARTY.md 参照）</li>

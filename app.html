@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self'; style-src 'self'; img-src 'self' data:; connect-src https://keys.openpgp.org">
+  <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'wasm-unsafe-eval'; style-src 'self'; img-src 'self' data:; connect-src 'self' https://keys.openpgp.org">
   <title>Kakehashi - 統合復元</title>
   <link rel="stylesheet" href="style.css">
 </head>
@@ -24,25 +24,23 @@
         <button type="button" id="select-image">画像ファイルを選択</button>
       </div>
 
-      <div id="camera-container" style="display:none;">
-        <video id="camera-video" autoplay playsinline muted style="width:100%; max-width:480px; background:#000;"></video>
-        <canvas id="qr-canvas" style="display:none;"></canvas>
+      <div id="camera-container" hidden>
+        <video id="camera-video" autoplay playsinline muted></video>
+        <canvas id="qr-canvas" hidden></canvas>
       </div>
-      <input type="file" id="image-file" accept="image/*" style="display:none;">
+      <input type="file" id="image-file" accept="image/*" hidden>
       <div id="qr-status"></div>
 
-      <div id="chunk-progress" style="display:none;margin-top:15px;padding:12px;background:#e9ecef;border-radius:4px;">
+      <div id="chunk-progress" hidden>
         <h3>QR チャンク収集状況</h3>
-        <div style="width:100%;height:24px;background:#dee2e6;border-radius:12px;overflow:hidden;margin-bottom:8px;">
-          <div id="progress-bar" style="height:100%;background:#28a745;width:0%;"></div>
-        </div>
+        <progress id="progress-bar" max="100" value="0"></progress>
         <p id="progress-text">0 / 0 枚読み取り済み</p>
         <p id="missing-text">欠番: なし</p>
       </div>
     </section>
 
     <!-- ステップ 2: メアド入力（QR 読み取り後に表示） -->
-    <section id="step-email" class="step" style="display:none;">
+    <section id="step-email" class="step" hidden>
       <h2>ステップ 2: メールアドレスを入力</h2>
       <p>読み取った QR の秘密部分に対応する公開鍵を keys.openpgp.org から取得します。</p>
       <div class="input-group">
@@ -54,7 +52,7 @@
     </section>
 
     <!-- ステップ 3: フィンガープリント照合 -->
-    <section id="step-verify" class="step" style="display:none;">
+    <section id="step-verify" class="step" hidden>
       <h2>ステップ 3: フィンガープリントを確認</h2>
       <p>取得した公開鍵のフィンガープリントと、紙に併記された値を比較してください。</p>
       <div class="fingerprint-compare">
@@ -72,7 +70,7 @@
     </section>
 
     <!-- ステップ 4: ダウンロード -->
-    <section id="step-download" class="step" style="display:none;">
+    <section id="step-download" class="step" hidden>
       <h2>ステップ 4: 復元完了</h2>
       <p>秘密鍵が正常に再構成されました。</p>
       <button type="button" id="btn-download">.gpg ファイルをダウンロード</button>
@@ -80,7 +78,7 @@
     </section>
 
     <!-- エラー -->
-    <section id="step-error" class="step" style="display:none;">
+    <section id="step-error" class="step" hidden>
       <h2>エラー</h2>
       <p id="error-message"></p>
       <button type="button" id="btn-retry">やり直す</button>
@@ -91,14 +89,8 @@
   <script src="src/chunk.js"></script>
   <script src="src/fingerprint.js"></script>
   <script src="src/qrcode.js"></script>
+  <script src="vendor/paperkey/paperkey.js"></script>
   <script src="src/paperkey.js"></script>
   <script src="src/app.js"></script>
-  <script>
-    if ('serviceWorker' in navigator) {
-      navigator.serviceWorker.register('./sw.js').catch((err) => {
-        console.log('SW registration failed:', err);
-      });
-    }
-  </script>
 </body>
 </html>

@@ -1,3 +1,4 @@
+(function () {
 /**
  * qrcode.js – QR コードのエンコード／デコード
  *
@@ -455,8 +456,9 @@ function decodeQR(imageData) {
   if (typeof require === 'function') {
     try {
       jsQR = require('../vendor/jsqr/jsqr.js');
-    } catch {
-      return null;
+    } catch (error) {
+      if (typeof globalThis.jsQR === 'undefined') throw error;
+      jsQR = globalThis.jsQR;
     }
   } else if (typeof globalThis.jsQR !== 'undefined') {
     jsQR = globalThis.jsQR;
@@ -484,4 +486,12 @@ function decodeQR(imageData) {
   }
 }
 
-module.exports = { encodeQR, decodeQR };
+const qrcodeApi = { encodeQR, decodeQR };
+
+if (typeof module !== 'undefined' && module.exports) {
+  module.exports = qrcodeApi;
+}
+if (typeof globalThis !== 'undefined') {
+  globalThis.qrcode = qrcodeApi;
+}
+})();
