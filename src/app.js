@@ -450,9 +450,3 @@ els.btnRetry.addEventListener('click', resetState);
 
 // ── 初期化 ──
 resetState();
-
-if ('serviceWorker' in navigator && /^https?:$/.test(location.protocol)) {
-  navigator.serviceWorker.register('./sw.js').catch((error) => {
-    console.error('Service Worker の登録に失敗しました:', error);
-  });
-}
