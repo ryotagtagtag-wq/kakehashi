@@ -4,47 +4,122 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self'; style-src 'self'; img-src 'self' data:; connect-src 'none'">
-  <title>Kakehashi</title>
+  <meta name="theme-color" content="#f5f8f6">
+  <title>Kakehashi — 紙のバックアップから鍵を復元</title>
   <link rel="stylesheet" href="style.css">
 </head>
-<body>
-  <header>
-    <h1>Kakehashi</h1>
-    <p>GPG 秘密鍵の復元 — 公開鍵と paperkey 紙バックアップを組み合わせる</p>
+<body class="home-page">
+  <header class="home-hero">
+    <nav class="home-nav" aria-label="メインナビゲーション">
+      <a class="brand" href="./" aria-label="Kakehashi ホーム">
+        <span class="brand-mark" aria-hidden="true">K</span>
+        <span>Kakehashi</span>
+      </a>
+      <a class="nav-link" href="app.html">復元をはじめる <span aria-hidden="true">↗</span></a>
+    </nav>
+
+    <div class="hero-grid">
+      <div class="hero-copy">
+        <p class="eyebrow"><span class="eyebrow-line"></span> YOUR KEY, SAFELY RESTORED</p>
+        <h1>紙のバックアップから、<br><span>鍵を取り戻す。</span></h1>
+        <p class="hero-description">公開鍵と紙に保管した paperkey を組み合わせて、OpenPGP 秘密鍵を復元。手順はシンプルに、秘密情報はあなたの端末内で。</p>
+        <a class="primary-link" href="app.html">復元をはじめる <span aria-hidden="true">→</span></a>
+        <div class="hero-assurance">
+          <span class="assurance-icon" aria-hidden="true">✓</span>
+          <span>秘密部分はブラウザー内で処理。サーバーへ送信しません。</span>
+        </div>
+      </div>
+
+      <div class="hero-art" aria-hidden="true">
+        <div class="orbit orbit-one"></div>
+        <div class="orbit orbit-two"></div>
+        <div class="art-caption">A bridge back to your key</div>
+        <div class="paper-card">
+          <div class="paper-topline"><span>BACKUP SHEET</span><span>01 — 04</span></div>
+          <div class="qr-art">
+            <span class="qr-corner corner-tl"></span>
+            <span class="qr-corner corner-tr"></span>
+            <span class="qr-corner corner-bl"></span>
+            <span class="qr-pattern"></span>
+          </div>
+          <div class="paper-lines"><i></i><i></i><i></i></div>
+          <div class="paper-fingerprint">FINGERPRINT <span>•••• •••• ••••</span></div>
+        </div>
+        <div class="key-chip"><span class="key-dot"></span> PRIVATE BY DESIGN</div>
+        <div class="art-spark spark-one">✳</div>
+        <div class="art-spark spark-two">✳</div>
+      </div>
+    </div>
+    <div class="hero-bottom"><span>OPENPGP KEY RECOVERY</span><span>LOCAL-FIRST · NO KEY STORAGE</span></div>
   </header>
 
-  <main>
-    <section>
-      <h2>概要</h2>
-      <p>Kakehashi は、keys.openpgp.org から取得した公開鍵と、紙に印刷された paperkey 形式の秘密部分（QR 分割）を組み合わせて、GPG 秘密鍵を復元する PWA です。</p>
-      <p>復元ページは完全にローカルで動作し、外部通信を行いません。取得ページのみ keys.openpgp.org と通信します。</p>
+  <main class="home-main">
+    <section class="value-strip" aria-label="Kakehashiの特徴">
+      <article class="value-item">
+        <span class="value-number">01</span>
+        <div><h2>端末内で復元</h2><p>秘密部分と復元処理はブラウザー内で完結。</p></div>
+      </article>
+      <article class="value-item">
+        <span class="value-number">02</span>
+        <div><h2>指紋で照合</h2><p>復元前に紙のフィンガープリントを確認。</p></div>
+      </article>
+      <article class="value-item">
+        <span class="value-number">03</span>
+        <div><h2>保存しない設計</h2><p>秘密鍵や紙の秘密部分を保存しません。</p></div>
+      </article>
     </section>
 
-    <section>
-      <h2>使い方</h2>
-      <ol>
-        <li><strong>統合ページ</strong> で、紙の QR コードを読み取ります。</li>
-        <li>メールアドレスを入力し、keys.openpgp.org から対応する公開鍵を取得します。</li>
-        <li>紙に併記されたフィンガープリントと照合後、秘密鍵を `.gpg` ファイルとしてダウンロードします。</li>
+    <section class="how-section">
+      <div class="section-heading">
+        <p class="eyebrow"><span class="eyebrow-line"></span> SIMPLE BY DESIGN</p>
+        <h2>復元は、3つのステップ。</h2>
+        <p>必要なものを手元に用意したら、あとは画面の案内に沿って進むだけです。</p>
+      </div>
+      <ol class="journey-grid">
+        <li class="journey-card">
+          <span class="journey-index">01</span>
+          <span class="journey-icon icon-scan" aria-hidden="true"><i></i></span>
+          <h3>紙の QR を読み取る</h3>
+          <p>カメラまたは画像ファイルから、分割された QR コードを読み取ります。</p>
+          <span class="journey-arrow" aria-hidden="true">↗</span>
+        </li>
+        <li class="journey-card">
+          <span class="journey-index">02</span>
+          <span class="journey-icon icon-key" aria-hidden="true"><i></i></span>
+          <h3>公開鍵を取得・照合</h3>
+          <p>メールアドレスで公開鍵を取得し、紙の指紋と一致することを確かめます。</p>
+          <span class="journey-arrow" aria-hidden="true">↗</span>
+        </li>
+        <li class="journey-card">
+          <span class="journey-index">03</span>
+          <span class="journey-icon icon-unlock" aria-hidden="true"><i></i></span>
+          <h3>秘密鍵を復元する</h3>
+          <p>照合ができたら秘密鍵を再構成し、ファイルとしてダウンロードします。</p>
+          <span class="journey-arrow" aria-hidden="true">↗</span>
+        </li>
       </ol>
     </section>
 
-    <section>
-      <h2>ページ</h2>
-      <ul>
-        <li><a href="app.html">統合ページ（QR 読み取り → 公開鍵取得 → 秘密鍵復元）</a> — keys.openpgp.org と通信して公開鍵を取得後、完全ローカルで秘密鍵を復元</li>
-      </ul>
+    <section class="privacy-panel">
+      <div class="privacy-symbol" aria-hidden="true"><span></span></div>
+      <div class="privacy-copy">
+        <p class="eyebrow"><span class="eyebrow-line"></span> YOUR SECRET STAYS YOURS</p>
+        <h2>秘密は、あなたの手元に。</h2>
+        <p>外部へ問い合わせるのは公開鍵の取得だけ。QR の秘密部分や復元した鍵はブラウザー内で扱い、ストレージへ保存しません。</p>
+      </div>
+      <a class="text-link" href="app.html">復元の流れを見る <span aria-hidden="true">→</span></a>
     </section>
 
-    <section>
-      <h2>制約・注意</h2>
-      <ul>
-        <li>統合ページは keys.openpgp.org から公開鍵を取得し、同一オリジンから WASM を読み込みます（CSP: connect-src 'self' https://keys.openpgp.org）</li>
-        <li>秘密鍵の再構成は完全ローカルで行い、外部通信は公開鍵取得のみです</li>
-        <li>秘密鍵・秘密部分・パスフレーズはローカルストレージに保存しません</li>
-        <li>paperkey は GPL v2+ ライセンスで同梱されています（vendor/paperkey/、THIRD_PARTY.md 参照）</li>
-      </ul>
+    <section class="home-cta">
+      <div><p class="eyebrow">READY WHEN YOU ARE</p><h2>紙のバックアップを手元に。</h2></div>
+      <a class="primary-link" href="app.html">復元をはじめる <span aria-hidden="true">→</span></a>
     </section>
   </main>
+
+  <footer class="home-footer">
+    <a class="brand footer-brand" href="./"><span class="brand-mark" aria-hidden="true">K</span><span>Kakehashi</span></a>
+    <p>OpenPGP paper backup recovery · GPL v2+</p>
+  </footer>
+  <script src="src/register-sw.js"></script>
 </body>
 </html>

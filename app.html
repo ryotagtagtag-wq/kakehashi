@@ -7,8 +7,8 @@
   <title>Kakehashi - 統合復元</title>
   <link rel="stylesheet" href="style.css">
 </head>
-<body>
-  <header>
+<body class="app-page">
+  <header class="app-header">
     <h1>Kakehashi</h1>
     <p>QR 読み取り → 公開鍵取得 → 秘密鍵復元（統合ページ）</p>
   </header>
@@ -16,32 +16,48 @@
   <main>
     <!-- ステップ 1: QR 読み取り -->
     <section id="step-qr" class="step">
-      <h2>ステップ 1: QR コードを読み取る</h2>
-      <p>紙に印刷された QR コードをカメラまたは画像ファイルで読み取ってください。</p>
+      <div class="step-layout">
+        <div class="step-main">
+          <p class="step-kicker">STEP 01 / PAPER BACKUP</p>
+          <h2>QR コードを読み取る</h2>
+          <p>紙に印刷された QR コードを、カメラまたは画像ファイルから読み取ります。</p>
 
-      <div class="qr-input-options">
-        <button type="button" id="start-camera">カメラを起動</button>
-        <button type="button" id="select-image">画像ファイルを選択</button>
-      </div>
+          <div class="qr-input-options">
+            <button type="button" id="start-camera">カメラを起動</button>
+            <button type="button" id="select-image">画像ファイルを選択</button>
+          </div>
 
-      <div id="camera-container" hidden>
-        <video id="camera-video" autoplay playsinline muted></video>
-        <canvas id="qr-canvas" hidden></canvas>
-      </div>
-      <input type="file" id="image-file" accept="image/*" hidden>
-      <div id="qr-status"></div>
+          <div id="camera-container" hidden>
+            <video id="camera-video" autoplay playsinline muted></video>
+            <canvas id="qr-canvas" hidden></canvas>
+          </div>
+          <input type="file" id="image-file" accept="image/*" hidden>
+          <div id="qr-status"></div>
 
-      <div id="chunk-progress" hidden>
-        <h3>QR チャンク収集状況</h3>
-        <progress id="progress-bar" max="100" value="0"></progress>
-        <p id="progress-text">0 / 0 枚読み取り済み</p>
-        <p id="missing-text">欠番: なし</p>
+          <div id="chunk-progress" hidden>
+            <h3>QR チャンク収集状況</h3>
+            <progress id="progress-bar" max="100" value="0"></progress>
+            <p id="progress-text">0 / 0 枚読み取り済み</p>
+            <p id="missing-text">欠番: なし</p>
+          </div>
+        </div>
+
+        <aside class="step-aside" aria-label="読み取りのヒント">
+          <span class="aside-mark" aria-hidden="true">01</span>
+          <h3>紙のバックアップを用意</h3>
+          <p>QR コード全体が画面に入るようにかざしてください。複数枚ある場合は、読み取り枚数と欠番を確認してください。</p>
+          <div class="aside-note">
+            <span class="status-dot" aria-hidden="true"></span>
+            <span>秘密部分はこの端末内で処理されます</span>
+          </div>
+        </aside>
       </div>
     </section>
 
     <!-- ステップ 2: メアド入力（QR 読み取り後に表示） -->
     <section id="step-email" class="step" hidden>
-      <h2>ステップ 2: メールアドレスを入力</h2>
+      <p class="step-kicker">STEP 02 / PUBLIC KEY</p>
+      <h2>メールアドレスを入力</h2>
       <p>読み取った QR の秘密部分に対応する公開鍵を keys.openpgp.org から取得します。</p>
       <div class="input-group">
         <label for="email-input">メールアドレス</label>
@@ -53,7 +69,8 @@
 
     <!-- ステップ 3: フィンガープリント照合 -->
     <section id="step-verify" class="step" hidden>
-      <h2>ステップ 3: フィンガープリントを確認</h2>
+      <p class="step-kicker">STEP 03 / VERIFY</p>
+      <h2>フィンガープリントを確認</h2>
       <p>取得した公開鍵のフィンガープリントと、紙に併記された値を比較してください。</p>
       <div class="fingerprint-compare">
         <div>
@@ -71,7 +88,8 @@
 
     <!-- ステップ 4: ダウンロード -->
     <section id="step-download" class="step" hidden>
-      <h2>ステップ 4: 復元完了</h2>
+      <p class="step-kicker">STEP 04 / COMPLETE</p>
+      <h2>復元完了</h2>
       <p>秘密鍵が正常に再構成されました。</p>
       <button type="button" id="btn-download">.gpg ファイルをダウンロード</button>
       <p class="hint">ダウンロード後、メモリ上の秘密情報は消去されます。</p>
