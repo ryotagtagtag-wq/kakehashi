@@ -3,14 +3,14 @@
 // 静的アセットのみをキャッシュし、オフライン動作を可能にする。
 // 鍵サーバー（keys.openpgp.org）へのレスポンスはキャッシュ対象外。
 
-const CACHE_NAME = 'kakehashi-v1';
+const CACHE_NAME = 'kakehashi-v2';
 const STATIC_ASSETS = [
   './',
   './app.html',
   './style.css',
   './src/chunk.js',
   './src/app.js',
-  './src/fingerprint.js',
+  './src/openpgp.js',
   './src/qrcode.js',
   './src/paperkey.js',
   './src/restore.js',

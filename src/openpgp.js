@@ -15,6 +15,7 @@
  * along with this program; if not, see <https://www.gnu.org/licenses/>.
  */
 
+// OpenPGP packet parsing and key fingerprint utilities.
 (function () {
 const nodeCrypto = typeof require === 'function' ? require('crypto') : null;
 

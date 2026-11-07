@@ -9,7 +9,7 @@
 
 ### 基盤モジュール（src/）
 - `src/paperkey.js` — WASM 版 paperkey のラッパー（`vendor/paperkey/` 同梱）
-- `src/fingerprint.js` — OpenPGP 公開鍵フィンガープリント計算（v4/v5/v6）
+- `src/openpgp.js` — OpenPGP 公開鍵フィンガープリント計算（v4/v5/v6）
 - `src/qrcode.js` — QR 入出力形式の切替（base16 / base64）
 - `src/chunk.js` — PK1 フォーマットの分割・結合・欠番列挙
 - `src/sw.js` — Service Worker（静的アセットキャッシュのみ）
@@ -39,7 +39,7 @@ Phase B: docs/interfaces.md 作成（親のみ）
 Phase C: 基盤モジュール（並列可）
    - src/chunk.js          ← fingerprint, paperkey に依存しない
    - src/qrcode.js         ← 他モジュールに依存しない
-   - src/fingerprint.js    ← 他モジュールに依存しない
+   - src/openpgp.js        ← 他モジュールに依存しない
    - src/paperkey.js       ← vendor/paperkey WASM が必要（Emscripten インストールが前提）
 Phase D: 復元ページ restore.html + src/restore.js（Phase C 完了後）
 Phase E: 取得ページ fetch.html + src/fetch.js（Phase C 完了後、Phase D と並列可）
@@ -57,7 +57,7 @@ Phase E（取得ページ）は fingerprint にのみ依存し、Phase D と並�
 ### 並列可能
 - `src/chunk.js` の実装とテスト
 - `src/qrcode.js` の実装とテスト
-- `src/fingerprint.js` の実装とテスト
+- `src/openpgp.js` の実装とテスト
 - `vendor/paperkey/` の WASM ビルド（Emscripten インストール後に並列実行可）
 - `docs/verify-offline.md` の下書き（実装後）
 
@@ -77,7 +77,7 @@ Phase E（取得ページ）は fingerprint にのみ依存し、Phase D と並�
 |------|------------------------|------------------|----------|
 | @explorer（基盤A） | `src/chunk.js`, `test/chunk.test.js` | 他の src/ 完全 | 分割・結合ロジックは独立 |
 | @explorer（基盤B） | `src/qrcode.js`, `test/qrcode.test.js` | 他の src/ 完全 | QR 形式切替は独立 |
-| @explorer（基盤C） | `src/fingerprint.js`, `test/fingerprint.test.js` | 他の src/ 完全 | フィンガープリント計算は独立 |
+| @explorer（基盤Ｃ） | `src/openpgp.js`, `test/fingerprint.test.js` | 他の src/ 完全 | フィンガープリント計算は独立 |
 | @coder（paperkey） | `src/paperkey.js`, `vendor/paperkey/`, `test/paperkey.test.js`, `THIRD_PARTY.md` | `src/restore.js` 変更不可 | WASM ラッパーは秘密情報処理の核心 |
 | @designer（復元UI） | `restore.html`, `src/restore.js`（UI 骨格・表示関連） | `src/paperkey.js` の秘密処理部分を見ない | 復元ページは通信なしだが、UI 設計が必要 |
 | @coder（取得UI） | `fetch.html`, `src/fetch.js` | `src/restore.js` 完全（秘密情報処理を見せない） | 取得ページと復元ページを厳密に分離 |

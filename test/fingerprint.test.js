@@ -8,7 +8,7 @@ const {
   UnsupportedKeyVersionError,
   FingerprintMismatchError,
   InvalidArmoredKeyError,
-} = require('../src/fingerprint.js');
+} = require('../src/openpgp.js');
 
 /**
  * 旧形式 OpenPGP パケットヘッダを付与してアーマー化する。
@@ -53,7 +53,7 @@ describe('calculateFingerprint', () => {
 
   test('browser fallback calculates v4 and v5 fingerprints without Node built-ins', () => {
     const browserContext = { atob };
-    runInNewContext(readFileSync(require.resolve('../src/fingerprint.js'), 'utf8'), browserContext);
+    runInNewContext(readFileSync(require.resolve('../src/openpgp.js'), 'utf8'), browserContext);
 
     const vectors = [
       [0x04, '7a1ff1259daeb8c045c4d986546175db09119b12'],

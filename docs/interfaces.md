@@ -58,7 +58,7 @@ interface CollectionResult {
 
 ---
 
-### 2.2 src/fingerprint.js — OpenPGP フィンガープリント計算
+### 2.2 src/openpgp.js — OpenPGP フィンガープリント計算
 
 ```ts
 // armored 公開鍵からフィンガープリント（40 桁 16 進数、v4 は 160bit/20 バイト）を計算
@@ -126,9 +126,9 @@ function decodeQR(imageData: ImageData): string | null
 | `InvalidChunkError` | PK1 フォーマット不正 | chunk.js |
 | `DuplicateIndexConflictError` | 同一 index で内容が異なる | chunk.js |
 | `MissingIndexesError` | 欠番があり結合不可 | chunk.js |
-| `UnsupportedKeyVersionError` | v4/v5/v6 以外 | fingerprint.js |
-| `FingerprintMismatchError` | フィンガープリント不一致 | fingerprint.js, paperkey.js |
-| `InvalidArmoredKeyError` | armored 形式解析失敗 | fingerprint.js |
+| `UnsupportedKeyVersionError` | v4/v5/v6 以外 | openpgp.js |
+| `FingerprintMismatchError` | フィンガープリント不一致 | openpgp.js, paperkey.js |
+| `InvalidArmoredKeyError` | armored 形式解析失敗 | openpgp.js |
 | `PaperkeyInitError` | WASM 初期化失敗 | paperkey.js |
 | `PaperkeyRestoreError` | 秘密鍵再構成失敗 | paperkey.js |
 

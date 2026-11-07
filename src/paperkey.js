@@ -27,7 +27,7 @@
  */
 
 const fingerprintApi = typeof require === 'function'
-  ? require('./fingerprint.js')
+  ? require('./openpgp.js')
   : globalThis.fingerprint;
 const { calculateFingerprint, verifyFingerprint } = fingerprintApi;
 
