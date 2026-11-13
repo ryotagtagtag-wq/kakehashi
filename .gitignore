@@ -1,0 +1,6 @@
+*.gpg
+*.asc
+*.key
+*.png
+node_modules/
+.env*

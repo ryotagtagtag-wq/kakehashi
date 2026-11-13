@@ -1,0 +1,12 @@
+{
+  "name": "kakehashi",
+  "version": "0.1.0",
+  "description": "PWA to restore GPG secret keys from keys.openpgp.org public keys and paperkey paper secret parts (QR split)",
+  "private": true,
+  "scripts": {
+    "test": "node --test"
+  },
+  "engines": {
+    "node": ">=20"
+  }
+}
