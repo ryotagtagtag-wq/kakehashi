@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self'; style-src 'self'; img-src 'self' data:; connect-src https://keys.openpgp.org">
+  <title>Kakehashi - 公開鍵取得</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <header>
+    <h1>Kakehashi</h1>
+    <p>keys.openpgp.org から公開鍵を取得</p>
+  </header>
+
+  <main>
+    <section id="step-search" class="step">
+      <h2>ステップ 1: メールアドレスで検索</h2>
+      <p>keys.openpgp.org から公開鍵を検索します。送信されるのはメールアドレスのみです。</p>
+
+      <div class="input-group">
+        <label for="email-input">メールアドレス</label>
+        <input type="email" id="email-input" placeholder="user@example.com">
+      </div>
+
+      <button type="button" id="btn-search">検索</button>
+      <div id="search-status"></div>
+    </section>
+
+    <section id="step-results" class="step" style="display:none;">
+      <h2>ステップ 2: 公開鍵を選択</h2>
+      <p id="results-count"></p>
+      <div id="key-list"></div>
+    </section>
+
+    <section id="step-key" class="step" style="display:none;">
+      <h2>ステップ 3: 公開鍵の詳細</h2>
+      <div class="input-group">
+        <label for="armored-key-display">ASCII アーマー公開鍵</label>
+        <textarea id="armored-key-display" rows="15" readonly></textarea>
+      </div>
+      <div class="fingerprint-compare">
+        <div>
+          <strong>フィンガープリント:</strong><br>
+          <code id="key-fingerprint"></code>
+        </div>
+      </div>
+      <button type="button" id="btn-download-key">公開鍵をダウンロード (.asc)</button>
+    </section>
+
+    <section id="step-error" class="step" style="display:none;">
+      <h2>エラー</h2>
+      <p id="error-message"></p>
+      <button type="button" id="btn-retry">やり直す</button>
+    </section>
+  </main>
+
+  <script src="../src/fingerprint.js"></script>
+  <script src="fetch.js"></script>
+<script>
+  if ('serviceWorker' in navigator) {
+    navigator.serviceWorker.register('./sw.js').catch((err) => {
+      console.log('SW registration failed:', err);
+    });
+  }
+</script>
+</body>
+</html>

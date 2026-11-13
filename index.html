@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self'; style-src 'self'; img-src 'self' data:; connect-src 'none'">
+  <title>Kakehashi</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <header>
+    <h1>Kakehashi</h1>
+    <p>GPG 秘密鍵の復元 — 公開鍵と paperkey 紙バックアップを組み合わせる</p>
+  </header>
+
+  <main>
+    <section>
+      <h2>概要</h2>
+      <p>Kakehashi は、keys.openpgp.org から取得した公開鍵と、紙に印刷された paperkey 形式の秘密部分（QR 分割）を組み合わせて、GPG 秘密鍵を復元する PWA です。</p>
+      <p>復元ページは完全にローカルで動作し、外部通信を行いません。取得ページのみ keys.openpgp.org と通信します。</p>
+    </section>
+
+    <section>
+      <h2>使い方</h2>
+      <ol>
+        <li><strong>取得ページ</strong> で、keys.openpgp.org から公開鍵を検索しダウンロードします。</li>
+        <li><strong>復元ページ</strong> で、公開鍵と紙の QR コードを読み取ります。</li>
+        <li>紙に併記されたフィンガープリントと照合後、秘密鍵を `.gpg` ファイルとしてダウンロードします。</li>
+      </ol>
+    </section>
+
+    <section>
+      <h2>ページ</h2>
+      <ul>
+        <li><a href="fetch.html">公開鍵取得ページ</a> — keys.openpgp.org から公開鍵を取得（外部通信あり）</li>
+        <li><a href="restore.html">秘密鍵復元ページ</a> — 公開鍵と QR から秘密鍵を復元（完全ローカル・通信なし）</li>
+      </ul>
+    </section>
+
+    <section>
+      <h2>制約・注意</h2>
+      <ul>
+        <li>復元ページは外部通信を一切行いません（CSP: connect-src 'none'）</li>
+        <li>取得ページは `connect-src https://keys.openpgp.org` のみ許可</li>
+        <li>秘密鍵・秘密部分・パスフレーズはローカルストレージに保存しません</li>
+        <li>paperkey は GPL v2+ ライセンスで同梱されています（vendor/paperkey/、THIRD_PARTY.md 参照）</li>
+      </ul>
+    </section>
+  </main>
+</body>
+</html>

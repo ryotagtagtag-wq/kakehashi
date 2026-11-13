@@ -62,15 +62,20 @@ interface CollectionResult {
 
 ```ts
 // armored 公開鍵からフィンガープリント（40 桁 16 進数、v4 は 160bit/20 バイト）を計算
-// v4 → RFC 4880, v5/v6 → RFC 9580 に従う
+// v4 → RFC 4880 (SHA-1), v5/v6 → RFC 9580 (SHA-256)
 function calculateFingerprint(armoredKey: string): string
 
-// フィンガープリントの完全一致比較
+// フィンガープリントの完全一致比較（大文字小文字を区別しない）
 function verifyFingerprint(calculated: string, expected: string): boolean
+
+// 内部用: armored 公開鍵のデコード、パケット読み取り（restore.js で使用）
+function dearmor(armoredText: string): Uint8Array
+function readFirstPacket(bytes: Uint8Array): { tag: number; body: Uint8Array }
+function readPacketHeader(bytes: Uint8Array): { tag: number; bodyLen: number; bodyOffset: number }
 ```
 
 **エラー型:**
-- `UnsupportedKeyVersionError`: v4/v5/v6 以外のバージョン
+- `UnsupportedKeyVersionError`: v4(4)/v5(5)/v6(6) 以外のバージョン
 - `FingerprintMismatchError`: 計算値と期待値が不一致
 - `InvalidArmoredKeyError`: armored 形式の解析失敗
 
@@ -85,11 +90,12 @@ vendor/paperkey/ に同梱の paperkey (GPL v2) を Emscripten で WASM ビル�
 async function initPaperkeyWasm(): Promise<void>
 
 // 公開鍵 + 秘密部分から秘密鍵を再構成
+// secretPart: string (base16 テキスト / base64 テキスト) または Uint8Array (raw バイト列)
 // inputType: 'auto' | 'base16' | 'raw'
 // 戻り値: OpenPGP 秘密鍵パケットの Uint8Array（.gpg 相当）
 async function restoreSecretKey(
   pubkeyArmored: string,
-  secretPart: string,
+  secretPart: string | Uint8Array,
   inputType: 'auto' | 'base16' | 'raw'
 ): Promise<Uint8Array>
 ```
@@ -131,6 +137,6 @@ function decodeQR(imageData: ImageData): string | null
 | ライブラリ | パス | バージョン | ライセンス | 用途 |
 |------------|------|-----------|-----------|------|
 | paperkey | `vendor/paperkey/` | 1.6 (dmshaw/paperkey) | GPL v2+ | 秘密鍵再構成 (WASM) |
-| jsQR | `vendor/jsqr/` | 未確定 | 要確認 | QR コードデコード |
+| jsQR | `vendor/jsqr/jsqr.js` | 1.4.0 | MIT License | QR コードデコード |
 
 **重要:** paperkey は GPL v2+ です。Kakehashi 本体を GPL 互換でないライセンスで配布する場合は、ライセンス上の影響について game_ryo に確認が必要です（`THIRD_PARTY.md` 参照）。
