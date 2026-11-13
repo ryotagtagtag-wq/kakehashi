@@ -6,6 +6,7 @@
 const CACHE_NAME = 'kakehashi-v1';
 const STATIC_ASSETS = [
   './',
+  './app.html',
   './restore.html',
   './fetch.html',
   './style.css',
