@@ -22,4 +22,4 @@
 
 脆弱性を発見した場合は、GitHub の「Security」タブまたはリポジトリの Issue にてご報告ください。
 
-placeholder: security-contact@example.com
+placeholder: info@ryopc.org
