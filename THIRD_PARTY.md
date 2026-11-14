@@ -40,6 +40,9 @@ Kakehashi に同梱する外部ライブラリの一覧です。
 - **用途**: QR コードデコード（復元ページで使用）
 - **同梱ファイル**: `jsqr.js` のみ（`jsqr.min.js` は同梱しない）
 
-## 3. ライセンス確認事項
+## 3. ライセンス
 
-paperkey は GPL v2+ です。Kakehashi 本体のライセンス選択（`LICENSE`）については、game_ryo に確認が必要です。
+Kakehashi 本体は GNU General Public License v2+ (GPL v2+) でライセンスされています。
+詳細は `LICENSE` ファイルを参照してください。
+
+paperkey も GPL v2+ で、Kakehashi 本体と同じライセンス体系の下で配布されています。
